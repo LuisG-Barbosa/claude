@@ -1,0 +1,180 @@
+{
+  "definitions": {
+    "3VR_INVBALANCEFOROBSMAT_01": {
+      "kind": "entity",
+      "elements": {
+        "PRODUCT": {
+          "@EndUserText.label": "Product Number",
+          "type": "cds.String",
+          "length": 40
+        },
+        "PLANT": {
+          "@EndUserText.label": "Plant",
+          "type": "cds.String",
+          "length": 4
+        },
+        "CALMONTH": {
+          "@EndUserText.label": "Calendar Month",
+          "type": "cds.String",
+          "length": 6
+        },
+        "PostingMonth": {
+          "type": "cds.String",
+          "length": 12
+        },
+        "STORAGELOCATION": {
+          "@EndUserText.label": "Storage Location",
+          "type": "cds.String",
+          "length": 4
+        },
+        "STORAGELOCATIONNAME": {
+          "@EndUserText.label": "Storage Location Name",
+          "type": "cds.String",
+          "length": 16
+        },
+        "SnapshotDate": {
+          "@EndUserText.label": "Snapshot Date",
+          "type": "cds.Date"
+        },
+        "CreationDateProdPlant": {
+          "@EndUserText.label": "Material Plant Creation Date",
+          "type": "cds.Date"
+        },
+        "OwnedStockQuantity": {
+          "@EndUserText.label": "Total Owned Stock Qty",
+          "precision": 38,
+          "scale": 14,
+          "type": "cds.Decimal"
+        },
+        "OwnedStockValueInCC": {
+          "@EndUserText.label": "Total Owned Stock Value LC",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "OwnedStockValueInGC": {
+          "@EndUserText.label": "Total Owned Stock Value USD",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "OwnedStockOnHandQuantity": {
+          "@EndUserText.label": "Owned Stock on Hand Qty",
+          "precision": 38,
+          "scale": 14,
+          "type": "cds.Decimal"
+        },
+        "OwnedStockOnHandValueInCC": {
+          "@EndUserText.label": "Owned Stock on Hand Value LC",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "OwnedStockOnHandValueInGC": {
+          "@EndUserText.label": "Owned Stock on Hand Value USD",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "OwnedTransferQuantity": {
+          "@EndUserText.label": "Owned Transfer Qty",
+          "precision": 38,
+          "scale": 14,
+          "type": "cds.Decimal"
+        },
+        "OwnedTransferValueInCC": {
+          "@EndUserText.label": "Owned Transfer Value LC",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "OwnedTransferValueInGC": {
+          "@EndUserText.label": "Owned Transfer Value USD",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "OwnedTransitQuantity": {
+          "@EndUserText.label": "Owned Transit Qty",
+          "precision": 38,
+          "scale": 14,
+          "type": "cds.Decimal"
+        },
+        "OwnedTransitValueInCC": {
+          "@EndUserText.label": "Owned Transit Value LC",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "OwnedTransitValueInGC": {
+          "@EndUserText.label": "Owned Transit Value USD",
+          "precision": 38,
+          "scale": 2,
+          "type": "cds.Decimal"
+        },
+        "Goods_Movement_Type": {
+          "type": "cds.String",
+          "length": 3
+        },
+        "Aging_Date_V2": {
+          "@EndUserText.label": "Aging_Date_V2",
+          "type": "cds.Date"
+        },
+        "GI_MAX_DATE": {
+          "@EndUserText.label": "GI_MAX_DATE",
+          "type": "cds.Date"
+        },
+        "GR_MIN_DATE": {
+          "@EndUserText.label": "GR_MIN_DATE",
+          "type": "cds.Date"
+        },
+        "LastActivityDate": {
+          "@EndUserText.label": "LastActivityDate",
+          "type": "cds.Date"
+        },
+        "Count": {
+          "@EndUserText.label": "Count",
+          "type": "cds.Integer",
+          "@Aggregation.default": {
+            "#": "SUM"
+          }
+        },
+        "Inventory_Age_V2": {
+          "@EndUserText.label": "Inventory Age V2",
+          "type": "cds.Integer"
+        },
+        "Age_V2": {
+          "@EndUserText.label": "Age V2",
+          "type": "cds.String",
+          "length": 10
+        },
+        "Active_Stock_Indicator_V2": {
+          "@EndUserText.label": "Active Stock Indicator V2",
+          "type": "cds.String",
+          "length": 5000
+        },
+        "Inventory_Age_Band_V2": {
+          "@EndUserText.label": "Inventory Age Band V2",
+          "type": "cds.String",
+          "length": 5000
+        },
+        "ProductPlant": {
+          "@EndUserText.label": "Material Plant",
+          "type": "cds.String",
+          "length": 45
+        }
+      },
+      "@ObjectModel.supportedCapabilities": [
+        {
+          "#": "DATA_STRUCTURE"
+        }
+      ],
+      "@EndUserText.label": "Inventory Balance for Obsolete Material",
+      "@ObjectModel.modelingPattern": {
+        "#": "DATA_STRUCTURE"
+      },
+      "@DataWarehouse.consumption.external": true,
+      "@DataWarehouse.sqlEditor.query": "-- 3VR_INVBALANCEFOROBSMAT_01\n-- Consume el 2VR_SCM_INVBALANCE_01 ORIGINAL (sin enriquecer) y le aplica\n-- la capa de obsolescencia (goods movement + aging + age band + storage loc name)\n-- que antes vivia dentro del 2VR (y que inflaba sus registros).\nSELECT\n    enr.\"PRODUCT\",\n    enr.\"PLANT\",\n    enr.\"CALMONTH\",\n    enr.\"PostingMonth\",\n    enr.\"STORAGELOCATION\",\n    slt.\"STORAGELOCATIONNAME\",\n    enr.\"SnapshotDate\",\n    enr.\"CreationDateProdPlant\",\n    -- medidas base (vienen del 2VR original)\n    enr.\"OwnedStockQuantity\",\n    enr.\"OwnedStockValueInCC\",\n    enr.\"OwnedStockValueInGC\",\n    enr.\"OwnedStockOnHandQuantity\",\n    enr.\"OwnedStockOnHandValueInCC\",\n    enr.\"OwnedStockOnHandValueInGC\",\n    enr.\"OwnedTransferQuantity\",\n    enr.\"OwnedTransferValueInCC\",\n    enr.\"OwnedTransferValueInGC\",\n    enr.\"OwnedTransitQuantity\",\n    enr.\"OwnedTransitValueInCC\",\n    enr.\"OwnedTransitValueInGC\",\n    -- enriquecimiento\n    enr.\"Goods_Movement_Type\",\n    enr.\"Aging_Date_V2\",\n    enr.\"GI_MAX_DATE\",\n    enr.\"GR_MIN_DATE\",\n    enr.\"LastActivityDate\",\n    enr.\"Count\",\n    enr.\"Inventory_Age_V2\",\n    TO_NVARCHAR(age.\"Age\")           AS \"Age_V2\",\n    age.\"ActiveStockIndicator\"       AS \"Active_Stock_Indicator_V2\",\n    age.\"InventoryAgeBand\"           AS \"Inventory_Age_Band_V2\",\n    enr.\"ProductPlant\"\nFROM (\n    SELECT\n        j.\"PRODUCT\", j.\"PLANT\", j.\"CALMONTH\", j.\"PostingMonth\", j.\"STORAGELOCATION\",\n        j.\"SnapshotDate\", j.\"CreationDateProdPlant\",\n        j.\"OwnedStockQuantity\", j.\"OwnedStockValueInCC\", j.\"OwnedStockValueInGC\",\n        j.\"OwnedStockOnHandQuantity\", j.\"OwnedStockOnHandValueInCC\", j.\"OwnedStockOnHandValueInGC\",\n        j.\"OwnedTransferQuantity\", j.\"OwnedTransferValueInCC\", j.\"OwnedTransferValueInGC\",\n        j.\"OwnedTransitQuantity\", j.\"OwnedTransitValueInCC\", j.\"OwnedTransitValueInGC\",\n        j.\"Goods_Movement_Type\", j.\"Aging_Date_V2\", j.\"GI_MAX_DATE\", j.\"GR_MIN_DATE\",\n        j.\"LastActivityDate\", j.\"Count\",\n        -- Inventory_Age_V2 = meses entre la fecha de aging (o creacion) y el snapshot\n        CASE WHEN j.\"Aging_Date_V2\" IS NULL\n             THEN IFNULL(MONTHS_BETWEEN(j.\"CreationDateProdPlant\", j.\"SnapshotDate\"), 0)\n             ELSE IFNULL(MONTHS_BETWEEN(j.\"Aging_Date_V2\", j.\"SnapshotDate\"), 0) END AS \"Inventory_Age_V2\",\n        -- ProductPlant (MaterialPlantKEY) = material sin ceros a la izq || '-' || planta\n        CASE WHEN LTRIM(j.\"PRODUCT\", '0') = '' THEN '0' ELSE LTRIM(j.\"PRODUCT\", '0') END\n            || '-' || j.\"PLANT\" AS \"ProductPlant\"\n    FROM (\n        SELECT\n            gm.\"Product\"        AS \"PRODUCT\",\n            gm.\"PL\"             AS \"PLANT\",\n            gm.\"PostingMonth\"   AS \"CALMONTH\",\n            gm.\"PostingMonth\"   AS \"PostingMonth\",\n            gm.\"Goods_Movement_Type\",\n            base.\"STORAGELOCATION\",\n            base.\"SnapshotDate\",\n            obs.\"CreationDateProdPlant\",\n            obs.\"Aging_Date_V2\", obs.\"GI_MAX_DATE\", obs.\"GR_MIN_DATE\", obs.\"LastActivityDate\",\n            cnt.\"Count\",\n            base.\"OwnedStockQuantity\", base.\"OwnedStockValueInCC\", base.\"OwnedStockValueInGC\",\n            base.\"OwnedStockOnHandQuantity\", base.\"OwnedStockOnHandValueInCC\", base.\"OwnedStockOnHandValueInGC\",\n            base.\"OwnedTransferQuantity\", base.\"OwnedTransferValueInCC\", base.\"OwnedTransferValueInGC\",\n            base.\"OwnedTransitQuantity\", base.\"OwnedTransitValueInCC\", base.\"OwnedTransitValueInGC\"\n        FROM \"2SR_MATDOCGM_01\" AS gm\n        LEFT JOIN \"2SR_OBSMATDOCPPMONTHAGGR_01\" AS obs\n            ON  gm.\"Product\"     = obs.\"PRODUCT\"\n            AND gm.\"PL\"          = obs.\"PLANT\"\n            AND gm.\"PostingMonth\"= obs.\"CALMONTH\"\n        LEFT JOIN \"2VR_SCM_INVBALANCE_01\" AS base\n            ON  gm.\"PL\"          = base.\"PLANT\"\n            AND gm.\"PostingMonth\"= base.\"CALMONTH\"\n            AND gm.\"Product\"     = base.\"PRODUCT\"\n        LEFT JOIN (\n            SELECT \"PRODUCT\", \"PLANT\", SUM(1) AS \"Count\"\n            FROM \"2VR_MD_MARC_01\"\n            GROUP BY \"PRODUCT\", \"PLANT\"\n        ) AS cnt\n            ON  base.\"PLANT\"     = cnt.\"PLANT\"\n            AND base.\"PRODUCT\"   = cnt.\"PRODUCT\"      -- corregido: el nuevo unia solo por PLANT (inflaba)\n    ) AS j\n) AS enr\nLEFT JOIN \"3VR_MD_AGE_01\" AS age\n    ON enr.\"Inventory_Age_V2\" = age.\"Age\"\nLEFT JOIN \"2VR_MD_STORAGELOCATIONTEXT_01\" AS slt\n    ON  enr.\"PLANT\"           = slt.\"PLANT\"\n    AND enr.\"STORAGELOCATION\" = slt.\"STORAGELOCATION\";\n"
+    }
+  }
+}
